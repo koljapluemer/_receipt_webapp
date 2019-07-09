@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Quittungsscanner</title>
+        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+            rel="stylesheet">
+            
+    </head>
+
+    <body>
+        <main class="w-full bg-gray-200">
+            <h1 class="bg-blue-800 text-white text-center text-6xl shadow-md">Quittungsscanner</h1>
+            <div class="flex mx-auto justify-around">
+
+                <form action="{% url 'list' %}" method="post"
+                    enctype="multipart/form-data" class="m-5 p-5 rounded
+                    bg-white flex-grow">
+                    {% csrf_token %}
+                    <p>{{ form.non_field_errors }}</p>
+
+                    <p>{{ form.docfile.label_tag }} </p>
+                    <p>
+                        {{ form.docfile.errors }}
+                        {{ form.docfile }}
+                    </p>
+
+                    <p><input type="submit" value="Hochladen & Analysieren"
+                            class="w-full
+                            bg-green-800 p-2 my-4 rounded text-white font-bold
+                            text-xl" /></p>
+                </form>
+
+                <div class="m-5 p-5 rounded
+                    bg-white w-1/4 flex-grow">
+                    {% load static %}
+                    <img src='/media/temp_.jpg' alt="Quittung"
+                        class="max-w-full">
+                </div>
+
+                <div class="m-5 p-5 rounded bg-white flex-grow">
+                   
+                    <div class="class="text-gray-600">
+                        <details>
+                            <summary>Dateipfad anzeigen</summary>
+                            {{ doc }}
+                        </details>
+                        <details class="border-b border-gray-600">
+                            <summary > Gesamtes OCR Ergebnis
+                                anzeigen</summary>
+                            {{ result }}
+                        </details>
+                    </div>
+
+                    <div class="my-3">
+                        <h2 class="text-2xl font-semibold mb-2">Handelspartner</h2>
+                        <button class="bg-grey-300 rounded p-2 border hover:bg-gray-800 hover:text-white"
+                        onclick="changeInput('inputName', '{{ name.0 }}')">
+                            {{ name.0 }}
+                        </button>
+                        <button class="bg-grey-300 rounded p-2 border hover:bg-gray-800 hover:text-white"
+                        onclick="changeInput('inputName', '{{ name.1 }}')">
+                            {{ name.1 }}
+                        </button>
+                        <button class="bg-grey-300 rounded p-2 border hover:bg-gray-800 hover:text-white"   
+                        onclick="changeInput('inputName', '{{ name.2 }}')">
+                            {{ name.2 }}
+                        </button>
+                        <form>
+                            <input type="text" name="name" id="inputName"
+                                class="bg-grey-300 my-5 p-1 rounded border"
+                                placeholder="z.B. 'Apple Store'" value="" 
+                                onchange="updateTable(updateTable('tableName', this.value))">
+                        </form>
+                    </div>
+
+                    <div class="my-3">
+                        <h2 class="text-2xl font-semibold mb-2">Datum</h2>
+                        {% for date in dates %}
+                        <button class="bg-grey-300 rounded p-2 border hover:bg-gray-800 hover:text-white"   
+                        onclick="changeInput('inputDate', '{{ date }}')">
+                            {{ date }}
+                        </button>
+                        {% endfor %}
+                        <button class="bg-grey-300 rounded p-2 border hover:bg-gray-800 hover:text-white"   
+                        onclick="changeInput('inputDate', '{{ today }}')">
+                            <span class="bg-grey-800 text-sm">heute:</span>
+                            {{ today }}
+                        </button>
+                        <form>
+                            <input type="text" name="name" id="inputDate"
+                                class="bg-grey-300 my-5 p-1 rounded border"
+                                placeholder="z.B. '01.11.1999'"
+                                onchange="updateTable(updateTable('tableDate', this.value))">
+                        </form>
+                    </div>
+
+                    <div class="my-3">
+                        <h2 class="text-2xl font-semibold mb-2">Summe</h2>
+                        {% for sum in sums %}
+                        <button class="bg-grey-300 rounded p-2 border hover:bg-gray-800 hover:text-white"   
+                        onclick="changeInput('inputSum', '{{ sum }}')">
+                            {{ sum }}
+                        </button>
+                        {% endfor %}
+                        <form>
+                            <input type="text" name="name" id="inputSum"
+                                class="bg-grey-300 my-5 p-1 rounded border"
+                                placeholder="z.B. 75,98"
+                                onchange="updateTable(updateTable('tableSum', this.value))">
+                        </form>
+                    </div>
+
+                    <div class="p-4 rounded bg-gray-200 shadow-md mb-4">
+                        <table class="w-full m-4 text-left">
+                            <tr class="border-b border-gray-600">
+                              <th>Handelspartner</th>
+                              <th>Datum</th>
+                              <th>Summe</th>
+                            </tr>
+                            <tr>
+                              <td id="tableName">-</td>
+                              <td id="tableDate">-</td>
+                              <td id="tableSum">-</td>
+                            </tr>
+                          </table> 
+                    </div>
+
+                    <button disabled class="bg-gray-300 rounded p-2 border">Abspeichern</button>
+                </div>
+            </main>
+        </body>
+        <script src="/media/main.js"></script>
+    </html>
